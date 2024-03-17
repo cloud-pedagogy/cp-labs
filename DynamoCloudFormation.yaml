@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: CloudFormation Template To Create Cloud Pedagogy DynamoDB Table
+
+Resources:
+  CpStudentTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: CpStudent
+      AttributeDefinitions:
+        - 
+          AttributeName: !Ref HashKeyElementName
+          AttributeType: !Ref HashKeyElementType
+      KeySchema:
+        - 
+          AttributeName: !Ref HashKeyElementName
+          KeyType: HASH
+          
+      ProvisionedThroughput:
+        ReadCapacityUnits: 4
+        WriteCapacityUnits: 4 
+        
+Parameters:
+  HashKeyElementName:
+    Type: String
+    Default: StudentId
+    Description: Hash Key Name
+  HashKeyElementType:
+    Type: String
+    Default: S
+    Description: Hash Key Type
+
+Outputs:
+  CpStudent:
+    Description: Cloud Pedagogy Student Table
+    Value: !Ref CpStudentTable
