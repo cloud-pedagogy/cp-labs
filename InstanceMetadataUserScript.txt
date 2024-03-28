@@ -1,0 +1,23 @@
+#!/bin/bash -ex
+sudo yum -y install nginx
+sudo chmod 777 /usr/share/nginx/html/index.html
+TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"`
+
+# Starting HTML file
+echo '<html><center><body bgcolor="#61A6E3" text="#FFFFFF" style="font-family: Arial"><h1>Cloud Pedagogy Application Load Balancer Demo</h1><h3>Availability Zone: ' > /usr/share/nginx/html/index.html
+
+# Using the token to fetch metadata
+echo $(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/placement/availability-zone) >> /usr/share/nginx/html/index.html
+echo '</h3> <h3>Instance Id: ' >> /usr/share/nginx/html/index.html
+echo $(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id) >> /usr/share/nginx/html/index.html
+echo '</h3> <h3>Public IP: ' >> /usr/share/nginx/html/index.html
+echo $(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/public-ipv4) >> /usr/share/nginx/html/index.html
+echo '</h3> <h3>Local IP: ' >> /usr/share/nginx/html/index.html
+echo $(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/local-ipv4) >> /usr/share/nginx/html/index.html
+
+# Ending HTML file
+echo '</h3></html> ' >> /usr/share/nginx/html/index.html
+
+# - Ensure the nginx service is enabled and started.
+sudo systemctl enable nginx
+sudo systemctl start nginx
