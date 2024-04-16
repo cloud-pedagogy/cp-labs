@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cp-nginx-svc
+  labels:
+    env: cp-dev-server
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    env: cp-dev-server
