@@ -1,0 +1,20 @@
+import os
+import boto3
+
+CP_AMI = os.environ['AMI']
+CP_INSTANCE_TYPE = os.environ['INSTANCE_TYPE']
+CP_SUBNET_ID = os.environ['SUBNET_ID']
+
+ec2 = boto3.resource('ec2')
+
+def lambda_handler(event, context):
+
+    instance = ec2.create_instances(
+        ImageId=CP_AMI,
+        InstanceType=CP_INSTANCE_TYPE,
+        SubnetId=CP_SUBNET_ID,
+        MaxCount=1,
+        MinCount=1
+    )
+
+    print("New instance created:", instance[0].id)
